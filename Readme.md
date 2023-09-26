@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
-* Студент: [Элла Сидорова](https://up.htmlacademy.ru/univer-nodejs-api/2/user/147338).
-* Наставник: `Неизвестно`.
+- Студент: [Элла Сидорова](https://up.htmlacademy.ru/univer-nodejs-api/2/user/147338).
+- Наставник: [Владислав Поляков](https://up.htmlacademy.ru/univer-nodejs-api/2/user/1548493).
 
 ---
 
