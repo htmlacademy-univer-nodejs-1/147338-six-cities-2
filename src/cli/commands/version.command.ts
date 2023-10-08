@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Command } from "./command.interface.js";
@@ -19,9 +20,7 @@ export class VersionCommand implements Command {
 
   private readVersion(): string {
     const jsonContent = readFileSync(resolve(this.filePath), "utf-8"); // resolve решает проблемы, связанные с разницей в написании путей в разных операционных системах. Здесь получаем строку в формате JSON, содержащую файл
-    console.log(jsonContent);
     const importedContent: unknown = JSON.parse(jsonContent); // unknown - тип, запрещающий применять методы к переменной. Распаршиваем строку, получаем обычный объект
-    console.log(importedContent);
     if (!isPackageJSONConfig(importedContent)) {
       throw new Error("Failed to parse json content.");
     }
@@ -36,7 +35,7 @@ export class VersionCommand implements Command {
   public async execute(..._parameters: string[]): Promise<void> {
     try {
       const version = this.readVersion();
-      console.info(version);
+      console.info(chalk.blue(version));
     } catch (error: unknown) {
       console.error(`Failed to read version from ${this.filePath}`);
 
