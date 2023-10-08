@@ -1,11 +1,12 @@
 import { Command } from "./command.interface.js";
+import { TSVFileReader } from "../../shared/libs/file-reader/index.js";
 
 export class ImportCommand implements Command {
   public getName(): string {
     return "--import";
   }
 
-  public async execute(..._parameters: string[]): Promise<void> {
+  public execute(...parameters: string[]): void {
     const [filename] = parameters;
     const fileReader = new TSVFileReader(filename.trim());
 

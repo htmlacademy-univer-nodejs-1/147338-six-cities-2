@@ -16,11 +16,11 @@ export class CLIApplication {
         throw new Error(`Command ${command.getName()} is already registered`);
       }
       this.commands[command.getName()] = command; // В свойство объекта с ключом имени команды записывается новый экземпляр команды
-      console.log(command);
+      // console.log(command);
     });
-    console.log(commandList);
+    // console.log(commandList);
 
-    console.log(this.commands);
+    // console.log(this.commands);
   }
 
   public getCommand(commandName: string): Command {
