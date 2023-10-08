@@ -1,5 +1,5 @@
-import { Command } from "./commands/command.interface.js";
-import { CommandParser } from "./command-parser.js";
+import { Command } from './commands/command.interface.js';
+import { CommandParser } from './command-parser.js';
 
 type CommandCollection = Record<string, Command>; // Record - это один из утилитарных типов в TypeScript, который позволяет создавать объекты с определенным набором ключей и однотипными значениями.
 //  Это полезно, когда нужно гарантировать, что объект будет содержать определенные ключи и значения определенного типа. В данном случае ключи должны быть строками, а значения берутся на основе созданного интерфейса команд
@@ -7,7 +7,7 @@ type CommandCollection = Record<string, Command>; // Record - это один и
 export class CLIApplication {
   private commands: CommandCollection = {}; //  Объект с типом CommandCollection, который  будет хранить всю информацию о командах
 
-  constructor(private readonly defaultCommand: string = "--help") {}
+  constructor(private readonly defaultCommand: string = '--help') { }
 
   public registerCommands(commandList: Command[]): void {
     commandList.forEach((command) => {

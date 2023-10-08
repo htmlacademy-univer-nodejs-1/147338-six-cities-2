@@ -1,20 +1,20 @@
-import { FileReader } from "./file-reader.interface.js";
-import { readFileSync } from "node:fs";
+import { FileReader } from './file-reader.interface.js';
+import { readFileSync } from 'node:fs';
 import {
   Cities,
   Conveniences,
   Offer,
   PlacesTypes,
   UserTypes,
-} from "../../types/index.js";
+} from '../../types/index.js';
 
 export class TSVFileReader implements FileReader {
-  private rawData = "";
+  private rawData = '';
 
-  constructor(private readonly filename: string) {}
+  constructor(private readonly filename: string) { }
 
   public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: "utf-8" });
+    this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
     // console.log(this.rawData);
   }
 
@@ -23,13 +23,13 @@ export class TSVFileReader implements FileReader {
     // const rData = this.rawData;
     // console.log(rData);
     if (!this.rawData) {
-      throw new Error("File was not read");
+      throw new Error('File was not read');
     }
     // console.log(rData);
     return this.rawData
-      .split("\n")
+      .split('\n')
       .filter((row) => row.trim().length > 0)
-      .map((line) => line.split("\t"))
+      .map((line) => line.split('\t'))
       .map(
         ([
           name,
@@ -59,7 +59,7 @@ export class TSVFileReader implements FileReader {
           date,
           city: city as Cities,
           previewImage,
-          placeImages: placeImages.split(";"),
+          placeImages: placeImages.split(';'),
           isPremium: Boolean(isPremium),
           isFavorite: Boolean(isFavorite),
           rating: Number(rating),
@@ -67,7 +67,7 @@ export class TSVFileReader implements FileReader {
           roomsAmount: Number(roomsAmount),
           guestsAmount: Number(guestsAmount),
           price: Number(price),
-          conveniences: conveniences.split(";") as Conveniences[],
+          conveniences: conveniences.split(';') as Conveniences[],
           author: {
             name: authorName,
             email,
