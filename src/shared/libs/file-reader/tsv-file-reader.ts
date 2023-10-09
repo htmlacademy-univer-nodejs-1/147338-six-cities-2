@@ -15,17 +15,12 @@ export class TSVFileReader implements FileReader {
 
   public read(): void {
     this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
-    // console.log(this.rawData);
   }
 
   public toArray(): Offer[] {
-    // this.rawData = readFileSync(this.filename, { encoding: "utf-8" });
-    // const rData = this.rawData;
-    // console.log(rData);
     if (!this.rawData) {
       throw new Error('File was not read');
     }
-    // console.log(rData);
     return this.rawData
       .split('\n')
       .filter((row) => row.trim().length > 0)
