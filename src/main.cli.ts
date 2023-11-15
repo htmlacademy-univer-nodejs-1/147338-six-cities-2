@@ -4,6 +4,7 @@ import {
   HelpCommand,
   VersionCommand,
   ImportCommand,
+  GenerateCommand,
 } from './cli/index.js';
 
 function bootstrap() {
@@ -12,6 +13,7 @@ function bootstrap() {
     new HelpCommand(),
     new VersionCommand(),
     new ImportCommand(),
+    new GenerateCommand(),
   ]); //  регистрируем наши команды, т.е. создаем экземпляры команд
 
   cliApplication.processCommand(process.argv);
