@@ -4,8 +4,8 @@ import { Command } from './command.interface.js';
 import { MockServerData } from '../../shared/types/index.js';
 import { TSVOfferGenerator } from '../../shared/libs/offer-generator/index.js';
 import { getErrorMessage } from '../../shared/helpers/index.js';
-// import { TSVFileWriter } from '../../shared/libs/file-writer/index.js';
-import { appendFile } from 'node:fs/promises';
+import { TSVFileWriter } from '../../shared/libs/file-writer/index.js';
+// import { appendFile } from 'node:fs/promises';
 
 export class GenerateCommand implements Command {
   private readonly name = '--generate';
@@ -25,11 +25,11 @@ export class GenerateCommand implements Command {
 
   public async write(filepath: string, offersCount: number) {
     const tsvOfferGenerator = new TSVOfferGenerator(this.initialData);
-    // const tsvFileWriter = new TSVFileWriter(filepath);
+    const tsvFileWriter = new TSVFileWriter(filepath);
 
     for (let i = 0; i < offersCount; i++) {
-      // await tsvFileWriter.write(tsvOfferGenerator.generate());
-      appendFile(filepath, `${tsvOfferGenerator.generate()}\n`, 'utf-8');
+      await tsvFileWriter.write(tsvOfferGenerator.generate());
+      // appendFile(filepath, `${tsvOfferGenerator.generate()}\n`, 'utf-8');
     }
   }
 
