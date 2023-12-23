@@ -8,7 +8,7 @@ export function createOffer(offerData: string): Offer {
     type, roomsAmount, guestsAmount,
     price, conveniences, authorName,
     email, avatarUrl, password,
-    userType, latitude, longitude
+    userType, latitude, longitude, commentCount
   ] = offerData.replace('\n', '').split('\t');
 
   const author = {
@@ -36,5 +36,6 @@ export function createOffer(offerData: string): Offer {
     conveniences: conveniences.split(';') as Conveniences[],
     author,
     cityCoordinates: { latitude: Number(latitude), longitude: Number(longitude) },
+    commentCount: Number(commentCount),
   };
 }
