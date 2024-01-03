@@ -11,6 +11,7 @@ import { DatabaseClient } from './database-client.interface.js';
 @injectable()
 export class MongoDatabaseClient implements DatabaseClient {
   private mongoose: typeof Mongoose;
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   private isConnected: boolean = false;
 
   constructor(
