@@ -1,4 +1,5 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref, Severity } from '@typegoose/typegoose';
+
 import { Cities, Conveniences, Coordinates, PlacesTypes } from '../../types/index.js';
 import { UserEntity } from '../user/index.js';
 
@@ -28,7 +29,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public description!: string;
 
   @prop({ required: true })
-  public date!: Date;
+  public postDate!: Date;
 
   @prop({
     type: String,
@@ -88,10 +89,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({
     required: true
   })
-  public cityCoordinates!: Coordinates;
+  public location!: Coordinates;
 
   @prop({ default: 0 })
-  public commentCount!: number;
+  public commentsCount!: number;
 }
 
 export const OfferModel = getModelForClass(OfferEntity);
