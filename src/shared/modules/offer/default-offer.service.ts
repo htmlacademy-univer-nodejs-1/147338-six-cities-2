@@ -1,22 +1,38 @@
 import { DocumentType, types } from '@typegoose/typegoose';
+import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
+import { Types } from 'mongoose';
 
 import { Logger } from '../../libs/logger/index.js';
+import { HttpError } from '../../libs/rest/index.js';
 import { Components, SortType } from '../../types/index.js';
+import { UserEntity } from '../user/index.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { DEFAULT_OFFER_COUNT } from './offer.constant.js';
 import { OfferEntity } from './offer.entity.js';
 import { OfferService } from './offer-service.interface.js';
+import { OfferAggregationOperations } from './types/offer.aggregation-operations.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Components.Logger) private readonly logger: Logger,
-    @inject(Components.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Components.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Components.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) { }
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
+    const foundedUser = await this.userModel.findById(dto.authorId);
+
+    if (!foundedUser) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        `User with id: «${dto.authorId}» not exists`,
+        'DefaultOfferService'
+      );
+    }
+
     const result = await this.offerModel.create(dto);
 
     this.logger.info(`New offer created: ${dto.name}`);
@@ -26,67 +42,40 @@ export class DefaultOfferService implements OfferService {
 
   public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? DEFAULT_OFFER_COUNT;
-
-    const lookupOperation = {
-      $lookup: {
-        from: 'comments',
-        localField: '_id',
-        foreignField: 'offerId',
-        as: 'comments',
-      },
-    };
-
-    const addFieldsOperation = {
-      $addFields: {
-        rating: {
-          $divide: [
-            {
-              $reduce: {
-                input: '$comments',
-                initialValue: 0,
-                in: { $add: ['$$value', '$$this.rating'] },
-              },
-            },
-            {
-              $cond: {
-                if: { $ne: [{ $size: '$comments' }, 0] },
-                then: { $size: '$comments' },
-                else: 1
-              },
-            },
-          ],
-        },
-        commentsCount: { $size: '$comments' },
-        id: { $toString: '$_id' }
-      },
-    };
-
-    const removeCommentsOperation = { $unset: 'comments' };
-
     const limitOperation = { $limit: limit };
-
-    const sortOperation = { $sort: { createdAt: SortType.Down } };
 
     return this.offerModel
       .aggregate([
-        lookupOperation,
-        addFieldsOperation,
-        removeCommentsOperation,
+        OfferAggregationOperations.lookupCommentsOperation,
+        OfferAggregationOperations.addFieldsOperation,
+        OfferAggregationOperations.lookupUserOperation,
+        OfferAggregationOperations.unwindUserOperation,
+        OfferAggregationOperations.removeCommentsOperation,
         limitOperation,
-        sortOperation
+        OfferAggregationOperations.sortOperation
       ])
       .exec();
   }
 
   public async exists(documentId: string): Promise<boolean> {
-    return (await this.offerModel.exists({ _id: documentId }) !== null);
+    return (!!await this.offerModel.exists({ _id: documentId }));
   }
 
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findById(offerId)
-      .populate('authorId')
+    const offerMongoId = new Types.ObjectId(offerId);
+    const findOperation = { $match: { _id: offerMongoId } };
+
+    const [offer] = await this.offerModel
+      .aggregate([
+        findOperation,
+        OfferAggregationOperations.lookupCommentsOperation,
+        OfferAggregationOperations.addFieldsOperation,
+        OfferAggregationOperations.lookupUserOperation,
+        OfferAggregationOperations.unwindUserOperation,
+        OfferAggregationOperations.removeCommentsOperation,
+      ])
       .exec();
+    return offer;
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
@@ -96,6 +85,18 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
+    if (dto.authorId) {
+      const author = await this.userModel.findById(dto.authorId);
+
+      if (!author) {
+        throw new HttpError(
+          StatusCodes.BAD_REQUEST,
+          `Author with id «${dto.authorId}» not exists`,
+          'DefaultOfferService'
+        );
+      }
+    }
+
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, { new: true })
       .populate('authorId')
