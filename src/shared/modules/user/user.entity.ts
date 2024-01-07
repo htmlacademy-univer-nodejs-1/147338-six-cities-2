@@ -15,7 +15,7 @@ export interface UserEntity extends defaultClasses.Base { }
 export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({
     required: true,
-    minlength: [2, 'Minimal name length is 2'],
+    minlength: [1, 'Minimal name length is 1'],
     default: ''
   })
   public name!: string;
@@ -60,6 +60,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   public getPassword() {
     return this.password;
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hashPassword = createSHA(password, salt);
+    return hashPassword === this.password;
   }
 }
 
