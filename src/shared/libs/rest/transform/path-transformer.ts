@@ -1,14 +1,14 @@
-import { inject, injectable } from 'inversify';
+import {inject, injectable} from 'inversify';
 
-import { STATIC_ROUTES } from '../../../../rest/index.js';
-import { getFullServerPath } from '../../../helpers/index.js';
-import { Components } from '../../../types/index.js';
-import { Config, RestSchema } from '../../config/index.js';
-import { Logger } from '../../logger/index.js';
-import { DEFAULT_STATIC_IMAGES, STATIC_RESOURCE_FIELDS } from './path-transformer.constant.js';
+import {STATIC_ROUTES} from '../../../../rest/index.js';
+import {getFullServerPath, isExternalLink} from '../../../helpers/index.js';
+import {Components} from '../../../types/index.js';
+import {Config, RestSchema} from '../../config/index.js';
+import {Logger} from '../../logger/index.js';
+import {DEFAULT_STATIC_IMAGES, STATIC_RESOURCE_FIELDS} from './path-transformer.constant.js';
 
 
-function isObject(value: unknown): value is Record<string, object> {
+function isObject (value: unknown): value is Record<string, object> {
   return (typeof value === 'object' && value !== null && !Array.isArray(value));
 }
 
@@ -43,7 +43,7 @@ export class PathTransformer {
     return `${getFullServerPath(this.serverProtocol, this.serverHost, this.serverPort)}${rootPath}/${value}`;
   }
 
-  public execute(data: Record<string, unknown>): Record<string, unknown> {
+  public execute(data: Record<string, unknown>): Record<string, unknown>{
     const stack = [data];
     while (stack.length > 0) {
       const current = stack.pop();
@@ -58,13 +58,15 @@ export class PathTransformer {
           }
 
           if (this.isStaticProperty(key)) {
-            if (typeof value === 'string') {
+            if (typeof value === 'string' && !isExternalLink(value)){
               current[key] = this.transform(value);
             }
 
             if (Array.isArray(value)) {
               current[key] = value.map(
-                (currentImage) => typeof currentImage === 'string' ? this.transform(currentImage) : currentImage
+                (currentImage) => typeof currentImage === 'string' && !isExternalLink(currentImage)
+                  ? this.transform(currentImage)
+                  : currentImage
               );
             }
           }

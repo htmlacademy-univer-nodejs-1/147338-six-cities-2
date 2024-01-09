@@ -1,17 +1,17 @@
 import crypto from 'node:crypto';
 
-import { inject, injectable } from 'inversify';
-import { SignJWT } from 'jose';
+import {inject, injectable} from 'inversify';
+import {SignJWT} from 'jose';
 
-import { Config, RestSchema } from '../../libs/config/index.js';
-import { Logger } from '../../libs/logger/index.js';
-import { Components } from '../../types/index.js';
-import { LoginUserDto } from '../user/dto/login-user.dto.js';
-import { UserEntity, UserService } from '../user/index.js';
-import { JWT_ALGORITHM, JWT_EXPIRED } from './auth.constant.js';
-import { AuthService } from './auth-service.interface.js';
-import { UserNotFoundException, UserPasswordIncorrectException } from './errors/index.js';
-import { TokenPayload } from './types/token-payload.js';
+import {Config, RestSchema} from '../../libs/config/index.js';
+import {Logger} from '../../libs/logger/index.js';
+import {Components} from '../../types/index.js';
+import {LoginUserDto} from '../user/dto/login-user.dto.js';
+import {UserEntity, UserService} from '../user/index.js';
+import {JWT_ALGORITHM, JWT_EXPIRED} from './auth.constant.js';
+import {AuthService} from './auth-service.interface.js';
+import {UserNotFoundException, UserPasswordIncorrectException} from './errors/index.js';
+import {TokenPayload} from './types/token-payload.js';
 
 @injectable()
 export class DefaultAuthService implements AuthService {
@@ -34,7 +34,7 @@ export class DefaultAuthService implements AuthService {
     this.logger.info(`Create token for «${user.email}»...`);
 
     return new SignJWT(tokenPayload)
-      .setProtectedHeader({ alg: JWT_ALGORITHM })
+      .setProtectedHeader({alg: JWT_ALGORITHM})
       .setIssuedAt()
       .setExpirationTime(JWT_EXPIRED)
       .sign(secretKey);
@@ -42,12 +42,12 @@ export class DefaultAuthService implements AuthService {
 
   public async verify(dto: LoginUserDto): Promise<UserEntity> {
     const user = await this.userService.findByEmail(dto.email);
-    if (!user) {
+    if(!user) {
       this.logger.warn(`User with email «${dto.email}» not found`);
       throw new UserNotFoundException();
     }
 
-    if (!user.verifyPassword(dto.password, this.config.get('SALT'))) {
+    if(!user.verifyPassword(dto.password, this.config.get('SALT'))) {
       this.logger.warn(`Incorrect password for «${dto.email}»`);
       throw new UserPasswordIncorrectException();
     }

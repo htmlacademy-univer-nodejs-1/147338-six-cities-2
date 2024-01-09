@@ -1,11 +1,11 @@
-import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
+import {defaultClasses, getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose';
 
-import { createSHA } from '../../helpers/hash.js';
-import { User, UserTypes } from '../../types/index.js';
-import { OfferEntity } from '../offer/index.js';
+import {createSHA} from '../../helpers/hash.js';
+import {User, UserTypes} from '../../types/index.js';
+import {OfferEntity} from '../offer/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface UserEntity extends defaultClasses.Base { }
+export interface UserEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
@@ -64,10 +64,6 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   public setPassword(password: string, salt: string) {
     this.password = createSHA(password, salt);
-  }
-
-  public getPassword() {
-    return this.password;
   }
 
   public verifyPassword(password: string, salt: string) {

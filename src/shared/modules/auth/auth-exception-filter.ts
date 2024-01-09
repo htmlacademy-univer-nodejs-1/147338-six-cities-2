@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
+import {NextFunction, Request, Response} from 'express';
+import {inject, injectable} from 'inversify';
 
-import { Logger } from '../../libs/logger/index.js';
-import { ExceptionFilter } from '../../libs/rest/index.js';
-import { Components } from '../../types/index.js';
-import { BaseAuthException } from './errors/index.js';
+import {Logger} from '../../libs/logger/index.js';
+import {ExceptionFilter} from '../../libs/rest/index.js';
+import {Components} from '../../types/index.js';
+import {BaseAuthException} from './errors/index.js';
 
 @injectable()
 export class AuthExceptionFilter implements ExceptionFilter {
@@ -15,7 +15,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
   }
 
   public catch(error: unknown, _req: Request, res: Response, next: NextFunction) {
-    if (!(error instanceof BaseAuthException)) {
+    if(!(error instanceof BaseAuthException)) {
       return next(error);
     }
 

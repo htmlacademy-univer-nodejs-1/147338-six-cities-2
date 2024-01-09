@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { Error } from 'mongoose';
+import {NextFunction, Request, Response} from 'express';
+import {inject, injectable} from 'inversify';
+import {Error} from 'mongoose';
 
-import { createErrorObject } from '../../../helpers/index.js';
-import { Components } from '../../../types/index.js';
-import { Logger } from '../../logger/index.js';
-import { HttpError } from '../errors/index.js';
-import { ApplicationErrors } from '../types/index.js';
-import { ExceptionFilter } from './exception-filter.interface.js';
+import {createErrorObject} from '../../../helpers/index.js';
+import {Components} from '../../../types/index.js';
+import {Logger} from '../../logger/index.js';
+import {HttpError} from '../errors/index.js';
+import {ApplicationErrors} from '../types/index.js';
+import {ExceptionFilter} from './exception-filter.interface.js';
 
 @injectable()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -18,7 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   public catch(error: Error, req: Request, res: Response, next: NextFunction) {
-    if (!(error instanceof HttpError)) {
+    if(!(error instanceof HttpError)) {
       return next(error);
     }
 

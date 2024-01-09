@@ -1,4 +1,4 @@
-import { createHmac } from 'node:crypto';
+import {createHmac} from 'node:crypto';
 
 export function createSHA(line: string, salt: string) {
   const shaHasher = createHmac('sha256', salt);
