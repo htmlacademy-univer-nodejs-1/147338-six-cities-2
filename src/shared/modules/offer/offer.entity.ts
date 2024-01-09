@@ -1,10 +1,10 @@
-import { defaultClasses, getModelForClass, modelOptions, prop, Ref, Severity } from '@typegoose/typegoose';
+import {defaultClasses, getModelForClass, modelOptions, prop, Ref, Severity} from '@typegoose/typegoose';
 
-import { Cities, Conveniences, Coordinates, PlacesTypes } from '../../types/index.js';
-import { UserEntity } from '../user/index.js';
+import {Cities, Conveniences, Coordinates, PlacesTypes} from '../../types/index.js';
+import {UserEntity} from '../user/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface OfferEntity extends defaultClasses.Base { }
+export interface OfferEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
@@ -28,7 +28,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true })
+  @prop({required: true})
   public postDate!: Date;
 
   @prop({
@@ -38,7 +38,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public city!: Cities;
 
-  @prop({ required: true })
+  @prop({required: true})
   public previewImage!: string;
 
   @prop({
@@ -47,13 +47,16 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public placeImages!: string[];
 
-  @prop({ required: true })
+  @prop({required: true})
   public isPremium!: boolean;
 
-  @prop({ required: true })
+  @prop({required: true})
   public isFavorite!: boolean;
 
-  @prop({ required: true })
+  @prop({
+    required: true,
+    default: 0
+  })
   public rating!: number;
 
   @prop({
@@ -63,13 +66,13 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public type!: PlacesTypes;
 
-  @prop({ required: true })
+  @prop({required: true})
   public roomsAmount!: number;
 
-  @prop({ required: true })
+  @prop({required: true})
   public guestsAmount!: number;
 
-  @prop({ required: true })
+  @prop({required: true})
   public price!: number;
 
   @prop({
@@ -91,7 +94,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public location!: Coordinates;
 
-  @prop({ default: 0 })
+  @prop({default: 0})
   public commentsCount!: number;
 }
 

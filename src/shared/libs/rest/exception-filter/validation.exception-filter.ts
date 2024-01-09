@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
+import {NextFunction, Request, Response} from 'express';
+import {inject, injectable} from 'inversify';
 
-import { createErrorObject } from '../../../helpers/index.js';
-import { Components } from '../../../types/index.js';
-import { Logger } from '../../logger/index.js';
-import { ValidationError } from '../errors/index.js';
-import { ApplicationErrors } from '../types/index.js';
+import {createErrorObject} from '../../../helpers/index.js';
+import {Components} from '../../../types/index.js';
+import {Logger} from '../../logger/index.js';
+import {ValidationError} from '../errors/index.js';
+import {ApplicationErrors} from '../types/index.js';
 
 @injectable()
 export class ValidationExceptionFilter {
@@ -16,7 +16,7 @@ export class ValidationExceptionFilter {
   }
 
   public catch(error: unknown, _req: Request, res: Response, next: NextFunction) {
-    if (!(error instanceof ValidationError)) {
+    if(!(error instanceof ValidationError)) {
       return next(error);
     }
 

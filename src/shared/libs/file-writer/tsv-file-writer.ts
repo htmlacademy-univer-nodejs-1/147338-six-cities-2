@@ -1,7 +1,7 @@
-import { FileWriter } from './file-writer.interface.js';
-import { createWriteStream, WriteStream } from 'node:fs';
+import {createWriteStream, WriteStream} from 'node:fs';
 
-const CHUNK_SIZE = 512000;
+import {FileWriter} from './file-writer.interface.js';
+import {CHUNK_SIZE} from './tsv-file-writer.const.js';
 
 export class TSVFileWriter implements FileWriter {
   private stream: WriteStream;
@@ -17,7 +17,7 @@ export class TSVFileWriter implements FileWriter {
 
   public async write(row: string): Promise<unknown> {
     const writeSuccess = this.stream.write(`${row}\n`);
-    if (!writeSuccess) {
+    if(!writeSuccess) {
       return new Promise((resolve) => {
         this.stream.once('drain', () => resolve(true));
       });

@@ -1,24 +1,15 @@
-import { createSecretKey } from 'node:crypto';
+import {createSecretKey} from 'node:crypto';
 
-import { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { jwtVerify } from 'jose';
+import {NextFunction, Request, Response} from 'express';
+import {StatusCodes} from 'http-status-codes';
+import {jwtVerify} from 'jose';
 
-import { TokenPayload } from '../../../modules/auth/index.js';
-import { HttpError } from '../errors/index.js';
-import { Middleware } from './middleware.interface.js';
-
-function isTokenPayload(payload: unknown): payload is TokenPayload {
-  return (
-    (typeof payload === 'object' && payload !== null) &&
-    ('email' in payload && typeof payload.email === 'string') &&
-    ('name' in payload && typeof payload.name === 'string') &&
-    ('id' in payload && typeof payload.id === 'string')
-  );
-}
+import {isTokenPayload} from '../../../helpers/index.js';
+import {HttpError} from '../errors/index.js';
+import {Middleware} from './middleware.interface.js';
 
 export class ParseTokenMiddleware implements Middleware {
-  constructor(private readonly jwtSecret: string) { }
+  constructor(private readonly jwtSecret: string) {}
 
   public async execute(req: Request, _res: Response, next: NextFunction) {
     const authorizationHeader = req.headers?.authorization?.split(' ');
@@ -28,11 +19,11 @@ export class ParseTokenMiddleware implements Middleware {
 
     const [, token] = authorizationHeader;
 
-    try {
-      const { payload } = await jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
+    try{
+      const {payload} = await jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
 
-      if (isTokenPayload(payload)) {
-        req.tokenPayload = { ...payload };
+      if(isTokenPayload(payload)) {
+        req.tokenPayload = {...payload};
         return next();
       }
     } catch {

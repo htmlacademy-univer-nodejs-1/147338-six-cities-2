@@ -1,11 +1,11 @@
-import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
+import {defaultClasses, getModelForClass, modelOptions, prop, Ref} from '@typegoose/typegoose';
 
-import { OfferEntity } from '../offer/index.js';
-import { UserEntity } from '../user/index.js';
+import {OfferEntity} from '../offer/index.js';
+import {UserEntity} from '../user/index.js';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface CommentEntity extends defaultClasses.Base { }
+export interface CommentEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
@@ -20,7 +20,7 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true })
+  @prop({required: true})
   public rating!: number;
 
   @prop({

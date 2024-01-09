@@ -1,27 +1,32 @@
-import { DocumentType, types } from '@typegoose/typegoose';
-import { inject, injectable } from 'inversify';
+import {DocumentType, types} from '@typegoose/typegoose';
+import {inject, injectable} from 'inversify';
 
-import { Logger } from '../../libs/logger/index.js';
-import { Components } from '../../types/index.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { UpdateUserDto } from './dto/update-user.dto.js';
-import { DEFAULT_AVATAR_FILE_NAME } from './user.constant.js';
-import { UserEntity } from './user.entity.js';
-import { UserService } from './user-service.interface.js';
+import {Logger} from '../../libs/logger/index.js';
+import {Components} from '../../types/index.js';
+import {CreateUserDto} from './dto/create-user.dto.js';
+import {UpdateUserDto} from './dto/update-user.dto.js';
+import {DEFAULT_AVATAR_FILE_NAME} from './user.constant.js';
+import {UserEntity} from './user.entity.js';
+import {UserService} from './user-service.interface.js';
 
 @injectable()
 export class DefaultUserService implements UserService {
   constructor(
     @inject(Components.Logger) private readonly logger: Logger,
     @inject(Components.UserModel) private readonly userModel: types.ModelType<UserEntity>,
-  ) { }
+  ) {}
 
   public async exists(documentId: string): Promise<boolean> {
-    return (!!await this.userModel.exists({ _id: documentId }));
+    return (!!await this.userModel.exists({_id: documentId}));
   }
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity({ ...dto, avatarUrl: dto.avatarUrl ? dto.avatarUrl : DEFAULT_AVATAR_FILE_NAME });
+    const user = new UserEntity({
+      ...dto,
+      avatarUrl: dto.avatarUrl
+        ? dto.avatarUrl :
+        DEFAULT_AVATAR_FILE_NAME
+    });
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
@@ -31,7 +36,7 @@ export class DefaultUserService implements UserService {
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({email});
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
@@ -46,7 +51,7 @@ export class DefaultUserService implements UserService {
 
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel
-      .findByIdAndUpdate(userId, dto, { new: true })
+      .findByIdAndUpdate(userId, dto, {new: true})
       .exec();
   }
 }

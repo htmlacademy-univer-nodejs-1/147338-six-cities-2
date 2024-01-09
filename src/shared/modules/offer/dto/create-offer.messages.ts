@@ -1,4 +1,4 @@
-import { Cities, Conveniences, PlacesTypes } from '../../../types/index.js';
+import {Cities, Conveniences, PlacesTypes} from '../../../types/index.js';
 
 export const CreateOfferValidationMessages = {
   Name: {
@@ -48,7 +48,7 @@ export const CreateOfferValidationMessages = {
     minValue: 'Min price is 100',
     maxValue: 'Max price is 100000'
   },
-  Conveniences: {
+  Conveniences:{
     invalid: `Conveniences must be ${Object.values(Conveniences).join(' | ')}`
   },
   Location: {

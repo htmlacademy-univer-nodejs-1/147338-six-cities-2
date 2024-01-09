@@ -1,6 +1,6 @@
-import { StatusCodes } from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 
-import { BaseAuthException } from './base-auth.exception.js';
+import {BaseAuthException} from './base-auth.exception.js';
 
 export class UserPasswordIncorrectException extends BaseAuthException {
   constructor() {

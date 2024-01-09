@@ -1,4 +1,4 @@
-import { UserTypes } from '../../../types/index.js';
+import {UserTypes} from '../../../types/index.js';
 
 export const CreateUserValidationMessages = {
   Name: {
